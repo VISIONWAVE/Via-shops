@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details | VisionWave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
+</head>
+
+<body class="dark-mode">
+
+  <!-- ——— SINGLE PRODUCT ——— -->
+  <div class="product-details">
+    <img id="heroImg" src="assets/images/placeholder.jpg" alt="Product" />
+
+    <div class="product-info">
+      <h2 id="pName">Loading…</h2>
+      <p id="pDesc"></p>
+
+      <p class="price" id="pPrice"></p>
+      <p id="pStock">Checking stock…</p>
+
+      <button class="btn-primary" onclick="addToCart()">🛒 Add to Cart</button>
+      <button onclick="addToWishlist()">🤍 Wishlist</button>
+      <p style="margin-top:1rem;"><a href="products.html">← Back to Products</a></p>
+    </div>
+  </div>
+
+  <!-- demo reviews -->
+  <section class="reviews">
+    <h3>Customer Reviews</h3>
+    <div class="review-card"><strong>Ola James</strong><p>Great product, fast delivery!</p></div>
+    <div class="review-card"><strong>Fatima Tunde</strong><p>Exactly as described, love the quality.</p></div>
+  </section>
+
+  <!-- static related placeholders -->
+  <section class="related">
+    <h3>Related Products</h3>
+    <div class="related-products">
+      <div class="card"><p>Product A</p><small>₦3,500</small></div>
+      <div class="card"><p>Product B</p><small>₦5,200</small></div>
+      <div class="card"><p>Product C</p><small>₦4,000</small></div>
+    </div>
+  </section>
+
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+
+    if (!id) {
+      document.body.innerHTML = '<h2 style="text-align:center">Invalid product link</h2>';
+    } else {
+      fetch(`backend/product/get-product.php?id=${id}`)
+        .then(r => r.json())
+        .then(p => {
+          if (p.error) { document.body.innerHTML = `<h2>${p.error}</h2>`; return; }
+
+          // populate page
+          document.title   = `${p.name} | VisionWave`;
+          heroImg.src      = 'assets/images/' + (p.image || 'placeholder.jpg');
+          pName.textContent= p.name;
+          pDesc.textContent= p.description || 'No description.';
+          pPrice.textContent = '₦' + Number(p.price).toLocaleString();
+          pStock.textContent = '✅ In stock';
+        })
+        .catch(() => document.body.innerHTML = '<h2>Could not load product.</h2>');
+    }
+
+    function addToCart()     { alert('🛒 Added to cart (backend later)'); }
+    function addToWishlist() { alert('🤍 Added to wishlist (backend later)'); }
+  </script>
+  fetch(`backend/product/related.php?cat=${encodeURIComponent(p.category)}&id=${p.id}`)
+ .then(r=>r.json()).then(rel=>{
+   const wrap=document.querySelector('.related-products');
+   wrap.innerHTML=''; rel.forEach(x=>{
+     wrap.insertAdjacentHTML('beforeend',`<div class="card"><a href="product-details.html?id=${x.id}"><img src="assets/images/${encodeURIComponent(x.image)}"><p>${x.name}</p></a><small>₦${Number(x.price).toLocaleString()}</small></div>`);
+   });
+});
+
+  </script>
+
+  <footer>
+    <p>&copy; 2025 VisionWave. All rights reserved.</p>
+    <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+  </footer>
+</body>
+</html>

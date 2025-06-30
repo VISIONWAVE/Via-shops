@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Products | VisionWave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
+</head>
+
+<body class="dark-mode">
+  <!-- ─── TOP BAR ─────────────────────────────────────────── -->
+  <header class="top-bar">
+    <h1>🛍️ Products</h1>
+
+    <div class="filter-bar">
+      <input id="searchBox" class="search-input" type="text" placeholder="Search products…" />
+      <select id="catFilter" class="cat-select">
+        <option value="">All Categories</option>
+      </select>
+      <a href="cart.html" class="btn-primary">🛒 Cart</a>
+    </div>
+  </header>
+
+  <!-- ─── PRODUCT GRID ────────────────────────────────────── -->
+  <main>
+    <section id="grid" class="product-grid"></section>
+  </main>
+
+  <!-- ─── PAGE-SPECIFIC JS ────────────────────────────────── -->
+  <script>
+    const grid = document.getElementById('grid');
+    const searchBox = document.getElementById('searchBox');
+    const catFilter = document.getElementById('catFilter');
+    let allProducts = [];
+
+    // Fetch products from backend
+    async function fetchProducts() {
+      try {
+        const response = await fetch('backend/product/get-products.php');
+        allProducts = await response.json();
+        renderProducts(allProducts);
+        populateCategories(allProducts);
+      } catch (error) {
+        grid.innerHTML = '<p class="error-message">⚠️ Could not load products.</p>';
+      }
+    }
+
+    // Render product cards
+    function renderProducts(products) {
+      if (!products.length) {
+        grid.innerHTML = '<p class="no-results">No products found.</p>';
+        return;
+      }
+
+      grid.innerHTML = products.map(product => `
+        <div class="card" data-name="${product.name.toLowerCase()}" data-cat="${product.category}">
+          <a href="product-details.html?id=${product.id}">
+            <img src="assets/images/${encodeURIComponent(product.image)}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+          </a>
+          <p class="price">₦${parseFloat(product.price).toLocaleString()}</p>
+          <button onclick="addToCart(${product.id})">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    // Populate category dropdown
+    function populateCategories(products) {
+      const categories = [...new Set(products.map(p => p.category))].sort();
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        catFilter.appendChild(option);
+      });
+    }
+
+    // Filter products by search or category
+    function filterProducts() {
+      const searchTerm = searchBox.value.toLowerCase();
+      const selectedCategory = catFilter.value;
+      const filtered = allProducts.filter(p => {
+        return p.name.toLowerCase().includes(searchTerm) && (!selectedCategory || p.category === selectedCategory);
+      });
+      renderProducts(filtered);
+    }
+
+    searchBox.addEventListener('input', filterProducts);
+    catFilter.addEventListener('change', filterProducts);
+
+    function addToCart(id) {
+      alert(`✅ Added product ${id} to cart!`);
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart | VisionWave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.ico">
+  <style>
+    table       { width:100%; border-collapse:collapse; color:#fff; }
+    th,td       { padding:10px; border-bottom:1px solid #333; text-align:center; }
+    td img      { width:60px; border-radius:8px; }
+    .cta-bar    { text-align:right; margin-top:20px; }
+    .cta-bar button { margin-left:10px; }
+  </style>
+</head>
+<body class="dark-mode">
+
+  <header class="top-bar">
+    <h1>🛒 Your Cart</h1>
+    <a href="products.html" class="btn-primary">← Continue shopping</a>
+  </header>
+
+  <main style="max-width:900px;margin:40px auto">
+    <p id="emptyMsg" style="text-align:center">Your cart is empty.</p>
+
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Name</th><th>Qty</th><th>Total</th><th></th></tr>
+      </thead>
+      <tbody id="cartBody"></tbody>
+    </table>
+
+    <div class="cta-bar">
+      <strong>Subtotal: <span id="subTotal">₦0</span></strong>
+      <button class="btn-primary" onclick="clearCart()">Clear Cart</button>
+      <button class="btn-primary" onclick="location='checkout.html'">Checkout →</button>
+    </div>
+  </main>
+
+  <script src="assets/js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Browse Products</title>
+  <link rel="stylesheet" href="style.css" />
+     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <header>
+    <h1>Our Products</h1>
+    <nav>
+      <a href="homepage.html">Home</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <main id="product-list" class="product-container">
+    <!-- Products will be loaded here -->
+  </main>
+
+  <script>
+    fetch('../backend/products/get-products.php')
+      .then(res => res.json())
+      .then(products => {
+        const container = document.getElementById('product-list');
+        products.forEach(product => {
+          container.innerHTML += `
+            <div class="product-card">
+              <img src="${product.image_url}" alt="${product.name}" />
+              <h2>${product.name}</h2>
+              <p>${product.description}</p>
+              <p><strong>$${product.price}</strong></p>
+              <button onclick="addToCart(${product.id})">Add to Cart</button>
+            </div>
+          `;
+        });
+      });
+
+    function addToCart(productId) {
+      alert('Added to cart: ' + productId);
+    }
+  </script>
+</body>
+</html>

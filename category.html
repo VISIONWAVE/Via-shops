@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Products | VisionWave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
+</head>
+
+<body class="dark-mode">
+
+  <!-- ─── TOP BAR ─────────────────────────────────────────── -->
+  <header class="top-bar">
+    <h1 id="pageTitle">Category</h1>
+
+
+    <div class="filter-bar">
+      <input id="searchBox" class="search-input" type="text" placeholder="Search products…" />
+      <select id="catFilter" class="cat-select">
+        <option value="">All Categories</option>
+      </select>
+      <a href="cart.html" class="btn-primary">🛒 Cart</a>
+    </div>
+  </header>
+
+  <!-- ─── PRODUCT GRID ────────────────────────────────────── -->
+  <main>
+    <section id="grid" class="product-grid"></section>
+  </main>
+
+  <!-- ─── PAGE-SPECIFIC JS ────────────────────────────────── -->
+  <script>
+    const grid      = document.getElementById('grid');
+    const searchBox = document.getElementById('searchBox');
+    const catFilter = document.getElementById('catFilter');
+    let   allProducts = [];
+
+    /* Fetch full list ------------------------------------------------------ */
+    async function fetchProducts () {
+      try {
+        const res = await fetch('backend/product/get-products.php');
+        allProducts = await res.json();
+        populateCategories(allProducts);
+        renderProducts(allProducts);
+      } catch {
+        grid.innerHTML = '<p class="error-message">⚠️ Could not load products.</p>';
+      }
+    }
+
+    /* Build cards ---------------------------------------------------------- */
+    function renderProducts (list) {
+      if (!list.length) {
+        grid.innerHTML = '<p class="no-results">No products found.</p>';
+        return;
+      }
+
+      grid.innerHTML = list.map(p => `
+        <div class="card" data-name="${p.name.toLowerCase()}" data-cat="${p.category}">
+          <a href="product-details.html?id=${p.id}">
+            <img src="assets/images/${p.image || 'placeholder.jpg'}" alt="${p.name}">
+            <h3>${p.name}</h3>
+          </a>
+          <p class="price">₦${Number(p.price).toLocaleString()}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    /* Populate category selector ------------------------------------------ */
+    function populateCategories (list) {
+      const cats = [...new Set(list.map(p => p.category))].sort();
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        catFilter.appendChild(opt);
+      });
+    }
+
+    /* Live filter ---------------------------------------------------------- */
+    function applyFilter () {
+      const term = searchBox.value.toLowerCase();
+      const cat  = catFilter.value;
+      [...grid.children].forEach(card => {
+        const okName = card.dataset.name.includes(term);
+        const okCat  = !cat || card.dataset.cat === cat;
+        card.style.display = (okName && okCat) ? '' : 'none';
+      });
+    }
+    searchBox.addEventListener('input', applyFilter);
+    catFilter.addEventListener('change', applyFilter);
+
+    /* Demo add-to-cart ----------------------------------------------------- */
+    function addToCart (id) {
+      alert('✅ Added product ' + id + ' to cart (backend later)');
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>

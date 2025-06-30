@@ -1,0 +1,187 @@
+[
+    {
+        "id": 1,
+        "name": "Wireless Headphones",
+        "price": 59.99,
+        "image": "headset.jpg",
+        "category": "Electronics",
+        "rating": 4.5
+    },
+    {
+        "id": 2,
+        "name": "Smart Watch",
+        "price": 89.99,
+        "image": "smartwatch01.jpg",
+        "category": "Gadgets",
+        "rating": 4.3
+    },
+    {
+        "id": 3,
+        "name": "Nike Running Shoes",
+        "price": 79.99,
+        "image": "shoes01.jpg",
+        "category": "Footwear",
+        "rating": 4.8
+    },
+    {
+        "id": 10,
+        "name": "Wireless Headset",
+        "price": 49.99,
+        "image": "wireless headset01.jpg",
+        "category": "Electronics",
+        "rating": 4.1
+    },
+    {
+        "id": 11,
+        "name": "Smartwatch Sport Edition",
+        "price": 99.99,
+        "image": "smartwatch03.jpg",
+        "category": "Gadgets",
+        "rating": 4.5
+    },
+    {
+        "id": 12,
+        "name": "Running Shoes - Black",
+        "price": 89.99,
+        "image": "shoes04.jpg",
+        "category": "Footwear",
+        "rating": 4.9
+    },
+    {
+        "id": 4,
+        "name": "Nike Sneakers - Blue",
+        "price": 69.99,
+        "image": "shoes02.jpg",
+        "category": "Footwear",
+        "rating": 4.6
+    },
+    {
+        "id": 5,
+        "name": "Nike Sneakers - Red",
+        "price": 74.5,
+        "image": "shoes03.jpg",
+        "category": "Footwear",
+        "rating": 4.7
+    },
+    {
+        "id": 6,
+        "name": "Classic Smartwatch Black",
+        "price": 64.95,
+        "image": "smartwatch01.jpg",
+        "category": "Gadgets",
+        "rating": 4.4
+    },
+    {
+        "id": 7,
+        "name": "Smartwatch Rose Gold",
+        "price": 72.99,
+        "image": "smartwatch02.jpg",
+        "category": "Gadgets",
+        "rating": 4.3
+    },
+    {
+        "id": 8,
+        "name": "Wireless Headset Pro",
+        "price": 79.9,
+        "image": "wireless headset02.jpg",
+        "category": "Electronics",
+        "rating": 4.6
+    },
+    {
+        "id": 9,
+        "name": "High Bass Headphones",
+        "price": 54.99,
+        "image": "wireless headset04.jpg",
+        "category": "Electronics",
+        "rating": 4.2
+    },
+    {
+        "id": 20,
+        "name": "Round Neck T-Shirt",
+        "price": 34.99,
+        "image": "around neck cloth.jpg",
+        "category": "Clothing",
+        "rating": 4.1
+    },
+    {
+        "id": 11,
+        "name": "Ladies Handbag & Cloth Combo",
+        "price": 92.5,
+        "image": "bag&cloth.jpg",
+        "category": "Fashion",
+        "rating": 4.3
+    },
+    {
+        "id": 12,
+        "name": "Plain Cotton Cloth",
+        "price": 28.99,
+        "image": "cloth.jpg",
+        "category": "Clothing",
+        "rating": 3.9
+    },
+    {
+        "id": 13,
+        "name": "Complete African Wear Set",
+        "price": 110,
+        "image": "complete set of cloth.jpg",
+        "category": "Traditional",
+        "rating": 4.7
+    },
+    {
+        "id": 14,
+        "name": "Classic Lady Suit",
+        "price": 65.25,
+        "image": "lady suit.jpg",
+        "category": "Formal",
+        "rating": 4.2
+    },
+    {
+        "id": 15,
+        "name": "Executive Lady Suit",
+        "price": 79.99,
+        "image": "lady suit01.jpg",
+        "category": "Formal",
+        "rating": 4.4
+    },
+    {
+        "id": 16,
+        "name": "Trendy Ladies Wears",
+        "price": 52.49,
+        "image": "lady wears cloth.jpg",
+        "category": "Fashion",
+        "rating": 4.1
+    },
+    {
+        "id": 17,
+        "name": "Ladies Casual Top",
+        "price": 29.99,
+        "image": "ladys top.jpg",
+        "category": "Tops",
+        "rating": 4
+    },
+    {
+        "id": 18,
+        "name": "Classic White Top",
+        "price": 32.95,
+        "image": "ladys top02.jpg",
+        "category": "Tops",
+        "rating": 4.3
+    },
+    {
+        "id": 29,
+        "name": "Modeling Gown Outfit",
+        "price": 85,
+        "image": "modeling cloth.jpg",
+        "category": "Fashion",
+        "rating": 4.6
+    },
+    {
+        "id": 30,
+        "name": "cloth",
+        "price": 1500,
+        "image": "fashion/img_686288391ed769.09158653.jpg",
+        "category": "fashion",
+        "rating": 0,
+        "description": "best outfit"
+    }
+]
