@@ -1,40 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Your Cart | VisionWave</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="shortcut icon" href="assets/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
+
+  <!-- Cart-specific styles -->
   <style>
-    table       { width:100%; border-collapse:collapse; color:#fff; }
-    th,td       { padding:10px; border-bottom:1px solid #333; text-align:center; }
-    td img      { width:60px; border-radius:8px; }
-    .cta-bar    { text-align:right; margin-top:20px; }
-    .cta-bar button { margin-left:10px; }
+    .cart-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .cart-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .qty-btn {
+      padding: 5px 10px;
+      margin: 0 5px;
+      cursor: pointer;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    .summary-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .empty-cart {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2em;
+    }
+    .remove-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
-<body class="dark-mode">
 
+<body class="dark-mode">
+  <!-- ─── TOP BAR ─────────────────────────────────────── -->
   <header class="top-bar">
     <h1>🛒 Your Cart</h1>
-    <a href="products.html" class="btn-primary">← Continue shopping</a>
+    <a href="products.html" class="btn-primary">← Continue Shopping</a>
   </header>
 
-  <main style="max-width:900px;margin:40px auto">
-    <p id="emptyMsg" style="text-align:center">Your cart is empty.</p>
+  <!-- ─── MAIN CONTENT ────────────────────────────────── -->
+  <main class="cart-container">
+    <div id="emptyMsg" class="empty-cart">Your cart is empty.</div>
 
-    <table>
+    <table id="cartTable" style="display: none;">
       <thead>
-        <tr><th>Item</th><th>Name</th><th>Qty</th><th>Total</th><th></th></tr>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
       </thead>
       <tbody id="cartBody"></tbody>
     </table>
 
-    <div class="cta-bar">
-      <strong>Subtotal: <span id="subTotal">₦0</span></strong>
-      <button class="btn-primary" onclick="clearCart()">Clear Cart</button>
-      <button class="btn-primary" onclick="location='checkout.html'">Checkout →</button>
+    <div id="cartSummary" class="summary-card" style="display: none;">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal:</span>
+        <span id="subTotal">₦0</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping:</span>
+        <span id="shipping">₦0</span>
+      </div>
+      <div class="summary-row" style="font-weight: bold; border-top: 1px solid var(--border-color); padding-top: 10px;">
+        <span>Total:</span>
+        <span id="grandTotal">₦0</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <button id="clearCart" class="btn-danger">🗑️ Clear Cart</button>
+        <button id="checkoutBtn" class="btn-primary">Proceed to Checkout →</button>
+      </div>
     </div>
   </main>
 

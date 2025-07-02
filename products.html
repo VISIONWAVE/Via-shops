@@ -18,7 +18,7 @@
       <select id="catFilter" class="cat-select">
         <option value="">All Categories</option>
       </select>
-      <a href="cart.html" class="btn-primary">🛒 Cart</a>
+      <a href="cart.html" class="btn-primary">🛒 Cart (<span id="cartCount">0</span>)</a>
     </div>
   </header>
 
@@ -32,6 +32,7 @@
     const grid = document.getElementById('grid');
     const searchBox = document.getElementById('searchBox');
     const catFilter = document.getElementById('catFilter');
+    const cartCountElement = document.getElementById('cartCount');
     let allProducts = [];
 
     // Fetch products from backend
@@ -86,14 +87,49 @@
       renderProducts(filtered);
     }
 
-    searchBox.addEventListener('input', filterProducts);
-    catFilter.addEventListener('change', filterProducts);
+    // Add product to cart
+    function addToCart(productId) {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const product = allProducts.find(p => p.id == productId);
+        
+        if (!product) return;
 
-    function addToCart(id) {
-      alert(`✅ Added product ${id} to cart!`);
+        const existingItem = cart.find(item => item.id == productId);
+        
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1
+          });
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        alert(`✅ ${product.name} added to cart!`);
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('❌ Failed to add product to cart');
+      }
     }
 
+    // Update cart count in UI
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCountElement.textContent = count;
+    }
+
+    // Initialize
+    searchBox.addEventListener('input', filterProducts);
+    catFilter.addEventListener('change', filterProducts);
     fetchProducts();
+    updateCartCount();
   </script>
 </body>
 </html>
