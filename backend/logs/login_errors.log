@@ -7,5 +7,9 @@
 [2025-06-24 15:23:17] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: Incorrect password. Please try again.
 [2025-06-24 15:23:32] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: Incorrect password. Please try again.
 [2025-06-25 00:45:54] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: Incorrect password. Please try again.
+<<<<<<< Updated upstream
 [2025-07-01 11:15:27] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: No user found with that email.
 [2025-07-01 11:15:41] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: No user found with that email.
+=======
+[2025-07-01 10:31:07] LOGIN FAILED from IP ::1 using Email:  — Reason: Email and password are required.
+>>>>>>> Stashed changes
