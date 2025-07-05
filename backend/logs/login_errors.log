@@ -10,6 +10,10 @@
 <<<<<<< Updated upstream
 [2025-07-01 11:15:27] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: No user found with that email.
 [2025-07-01 11:15:41] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: No user found with that email.
+<<<<<<< Updated upstream
 =======
 [2025-07-01 10:31:07] LOGIN FAILED from IP ::1 using Email:  — Reason: Email and password are required.
+>>>>>>> Stashed changes
+=======
+[2025-07-03 21:51:18] LOGIN FAILED from IP ::1 using Email: olayemiseunpaul@gmail.com — Reason: Incorrect password. Please try again.
 >>>>>>> Stashed changes
