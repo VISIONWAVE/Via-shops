@@ -166,3 +166,20 @@ body {
   margin-bottom: 10px;
 }
 .load-more{display:block;margin:1rem auto;padding:10px 30px;}
+ /* Add to existing styles */
+    .product-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .wishlist-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .wishlist-btn.active {
+      color: red;
+      border-color: red;
+    }
+  

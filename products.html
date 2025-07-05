@@ -47,25 +47,55 @@
       }
     }
 
-    // Render product cards
+      // Render product cards with wishlist buttons
     function renderProducts(products) {
       if (!products.length) {
         grid.innerHTML = '<p class="no-results">No products found.</p>';
         return;
       }
 
-      grid.innerHTML = products.map(product => `
-        <div class="card" data-name="${product.name.toLowerCase()}" data-cat="${product.category}">
-          <a href="product-details.html?id=${product.id}">
-            <img src="assets/images/${encodeURIComponent(product.image)}" alt="${product.name}" />
-            <h3>${product.name}</h3>
-          </a>
-          <p class="price">₦${parseFloat(product.price).toLocaleString()}</p>
-          <button onclick="addToCart(${product.id})">Add to Cart</button>
-        </div>
-      `).join('');
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      
+      grid.innerHTML = products.map(product => {
+        const isInWishlist = wishlist.includes(product.id);
+        return `
+          <div class="card" data-name="${product.name.toLowerCase()}" data-cat="${product.category}">
+            <a href="product-details.html?id=${product.id}">
+              <img src="assets/images/${encodeURIComponent(product.image)}" alt="${product.name}" />
+              <h3>${product.name}</h3>
+            </a>
+            <p class="price">₦${parseFloat(product.price).toLocaleString()}</p>
+            <div class="product-actions">
+              <button onclick="addToCart(${product.id})">Add to Cart</button>
+              <button class="wishlist-btn ${isInWishlist ? 'active' : ''}" 
+                      onclick="toggleWishlist(${product.id}, this)">
+                ${isInWishlist ? '♥' : '♡'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
+    // Toggle product in wishlist
+    function toggleWishlist(productId, button) {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const index = wishlist.indexOf(productId);
+      
+      if (index === -1) {
+        // Add to wishlist
+        wishlist.push(productId);
+        button.classList.add('active');
+        button.innerHTML = '♥';
+      } else {
+        // Remove from wishlist
+        wishlist.splice(index, 1);
+        button.classList.remove('active');
+        button.innerHTML = '♡';
+      }
+      
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }
     // Populate category dropdown
     function populateCategories(products) {
       const categories = [...new Set(products.map(p => p.category))].sort();
@@ -130,6 +160,10 @@
     catFilter.addEventListener('change', filterProducts);
     fetchProducts();
     updateCartCount();
+    // Make functions available globally
+    window.toggleWishlist = toggleWishlist;
+    window.addToCart = addToCart;
+
   </script>
 </body>
 </html>

@@ -6,6 +6,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="shortcut icon" href="assets/images/favicon.ico" />
+  
+  <style>
+    .product-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    #heroImg {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: var(--card-bg);
+      padding: 20px;
+    }
+    
+    .product-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: var(--primary-color);
+    }
+    
+    .product-actions {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .wishlist-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .wishlist-btn.active {
+      color: red;
+      border-color: red;
+    }
+    
+    .reviews {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    .review-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    
+    .related-products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .related .card {
+      transition: transform 0.2s;
+    }
+    
+    .related .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    @media (max-width: 768px) {
+      .product-details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body class="dark-mode">
@@ -15,73 +103,272 @@
     <img id="heroImg" src="assets/images/placeholder.jpg" alt="Product" />
 
     <div class="product-info">
-      <h2 id="pName">Loading…</h2>
+      <h1 id="pName">Loading…</h1>
+      <div id="pRating" style="margin: 10px 0;"></div>
       <p id="pDesc"></p>
 
       <p class="price" id="pPrice"></p>
       <p id="pStock">Checking stock…</p>
 
-      <button class="btn-primary" onclick="addToCart()">🛒 Add to Cart</button>
-      <button onclick="addToWishlist()">🤍 Wishlist</button>
+      <div class="product-actions">
+        <button class="btn-primary" onclick="addToCart()">🛒 Add to Cart</button>
+        <button id="wishlistBtn" class="wishlist-btn" onclick="toggleWishlist()">
+          <span id="wishlistIcon">🤍</span> Wishlist
+        </button>
+      </div>
       <p style="margin-top:1rem;"><a href="products.html">← Back to Products</a></p>
     </div>
   </div>
 
-  <!-- demo reviews -->
+  <!-- Reviews Section -->
   <section class="reviews">
-    <h3>Customer Reviews</h3>
-    <div class="review-card"><strong>Ola James</strong><p>Great product, fast delivery!</p></div>
-    <div class="review-card"><strong>Fatima Tunde</strong><p>Exactly as described, love the quality.</p></div>
+    <h2>Customer Reviews</h2>
+    <div id="reviewsContainer">
+      <div class="review-card"><strong>Loading reviews...</strong></div>
+    </div>
+    
+    <h3 style="margin-top: 40px;">Write a Review</h3>
+    <form id="reviewForm" style="max-width: 600px;">
+      <div style="margin-bottom: 15px;">
+        <label>Rating:</label>
+        <select name="rating" required style="margin-left: 10px;">
+          <option value="">Select rating</option>
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="1">★☆☆☆☆</option>
+        </select>
+      </div>
+      <textarea name="comment" placeholder="Your review..." required 
+                style="width: 100%; padding: 10px; margin-bottom: 15px;"></textarea>
+      <button type="submit" class="btn-primary">Submit Review</button>
+    </form>
   </section>
 
-  <!-- static related placeholders -->
+  <!-- Related Products -->
   <section class="related">
-    <h3>Related Products</h3>
-    <div class="related-products">
-      <div class="card"><p>Product A</p><small>₦3,500</small></div>
-      <div class="card"><p>Product B</p><small>₦5,200</small></div>
-      <div class="card"><p>Product C</p><small>₦4,000</small></div>
+    <h2>Related Products</h2>
+    <div class="related-products" id="relatedProducts">
+      <div class="card"><p>Loading related products...</p></div>
     </div>
   </section>
-
-  <script>
-    const id = new URLSearchParams(location.search).get('id');
-
-    if (!id) {
-      document.body.innerHTML = '<h2 style="text-align:center">Invalid product link</h2>';
-    } else {
-      fetch(`backend/product/get-product.php?id=${id}`)
-        .then(r => r.json())
-        .then(p => {
-          if (p.error) { document.body.innerHTML = `<h2>${p.error}</h2>`; return; }
-
-          // populate page
-          document.title   = `${p.name} | VisionWave`;
-          heroImg.src      = 'assets/images/' + (p.image || 'placeholder.jpg');
-          pName.textContent= p.name;
-          pDesc.textContent= p.description || 'No description.';
-          pPrice.textContent = '₦' + Number(p.price).toLocaleString();
-          pStock.textContent = '✅ In stock';
-        })
-        .catch(() => document.body.innerHTML = '<h2>Could not load product.</h2>');
-    }
-
-    function addToCart()     { alert('🛒 Added to cart (backend later)'); }
-    function addToWishlist() { alert('🤍 Added to wishlist (backend later)'); }
-  </script>
-  fetch(`backend/product/related.php?cat=${encodeURIComponent(p.category)}&id=${p.id}`)
- .then(r=>r.json()).then(rel=>{
-   const wrap=document.querySelector('.related-products');
-   wrap.innerHTML=''; rel.forEach(x=>{
-     wrap.insertAdjacentHTML('beforeend',`<div class="card"><a href="product-details.html?id=${x.id}"><img src="assets/images/${encodeURIComponent(x.image)}"><p>${x.name}</p></a><small>₦${Number(x.price).toLocaleString()}</small></div>`);
-   });
-});
-
-  </script>
 
   <footer>
     <p>&copy; 2025 VisionWave. All rights reserved.</p>
     <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
   </footer>
+
+  <script>
+    // Get product ID from URL
+    const id = new URLSearchParams(location.search).get('id');
+    let currentProduct = null;
+    const wishlistBtn = document.getElementById('wishlistBtn');
+    const wishlistIcon = document.getElementById('wishlistIcon');
+
+    if (!id) {
+      document.body.innerHTML = '<h2 style="text-align:center">Invalid product link</h2>';
+    } else {
+      // Load product details
+      fetch(`backend/product/get-product.php?id=${id}`)
+        .then(r => r.json())
+        .then(p => {
+          if (p.error) { 
+            document.body.innerHTML = `<h2>${p.error}</h2>`; 
+            return; 
+          }
+
+          currentProduct = p;
+          
+          // populate page
+          document.title = `${p.name} | VisionWave`;
+          heroImg.src = 'assets/images/' + (p.image || 'placeholder.jpg');
+          pName.textContent = p.name;
+          pDesc.textContent = p.description || 'No description available.';
+          pPrice.textContent = '₦' + Number(p.price).toLocaleString();
+          pStock.textContent = p.stock > 0 ? '✅ In stock' : '❌ Out of stock';
+          
+          // Render star rating
+          pRating.innerHTML = renderStars(p.rating || 0);
+          
+          // Check wishlist status
+          const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+          if (wishlist.includes(parseInt(id))) {
+            wishlistBtn.classList.add('active');
+            wishlistIcon.textContent = '❤️';
+            wishlistBtn.querySelector('span').nextSibling.textContent = ' In Wishlist';
+          }
+          
+          // Load reviews
+          loadReviews(id);
+          
+          // Load related products
+          loadRelatedProducts(p.category, p.id);
+        })
+        .catch(() => document.body.innerHTML = '<h2>Could not load product.</h2>');
+    }
+
+    // Star rating renderer
+    function renderStars(rating) {
+      const fullStars = '★'.repeat(Math.floor(rating));
+      const emptyStars = '☆'.repeat(5 - Math.ceil(rating));
+      return `<span style="color: gold; font-size: 1.2em;">${fullStars}${emptyStars}</span> (${rating.toFixed(1)})`;
+    }
+
+    // Add to cart function
+    function addToCart() {
+      if (!currentProduct) return;
+      
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(item => item.id == currentProduct.id);
+      
+      if (existingItem) {
+        if (existingItem.quantity >= currentProduct.stock) {
+          alert(`Only ${currentProduct.stock} available in stock!`);
+          return;
+        }
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: currentProduct.id,
+          name: currentProduct.name,
+          price: currentProduct.price,
+          image: currentProduct.image,
+          quantity: 1
+        });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Visual feedback
+      const btn = event.target;
+      btn.textContent = '✓ Added!';
+      setTimeout(() => btn.textContent = '🛒 Add to Cart', 1000);
+      
+      // Update cart count in header
+      updateCartCount();
+    }
+
+    // Wishlist toggle
+    function toggleWishlist() {
+      if (!currentProduct) return;
+      
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const index = wishlist.indexOf(currentProduct.id);
+      
+      if (index === -1) {
+        // Add to wishlist
+        wishlist.push(currentProduct.id);
+        wishlistBtn.classList.add('active');
+        wishlistIcon.textContent = '❤️';
+        wishlistBtn.querySelector('span').nextSibling.textContent = ' In Wishlist';
+      } else {
+        // Remove from wishlist
+        wishlist.splice(index, 1);
+        wishlistBtn.classList.remove('active');
+        wishlistIcon.textContent = '🤍';
+        wishlistBtn.querySelector('span').nextSibling.textContent = ' Wishlist';
+      }
+      
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }
+
+    // Load reviews
+    function loadReviews(productId) {
+      fetch(`backend/reviews/get-reviews.php?product_id=${productId}`)
+        .then(r => r.json())
+        .then(reviews => {
+          const container = document.getElementById('reviewsContainer');
+          
+          if (reviews.length === 0) {
+            container.innerHTML = '<div class="review-card">No reviews yet. Be the first to review!</div>';
+            return;
+          }
+          
+          container.innerHTML = reviews.map(review => `
+            <div class="review-card">
+              <div style="display: flex; justify-content: space-between;">
+                <strong>${review.user_name}</strong>
+                <div>${renderStars(review.rating)}</div>
+              </div>
+              <p style="margin-top: 10px;">${review.comment}</p>
+              <small style="color: #888;">${new Date(review.created_at).toLocaleDateString()}</small>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          document.getElementById('reviewsContainer').innerHTML = 
+            '<div class="review-card">Error loading reviews</div>';
+        });
+    }
+
+    // Submit review
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      
+      fetch('backend/reviews/add-review.php', {
+        method: 'POST',
+        body: JSON.stringify({
+          product_id: id,
+          rating: formData.get('rating'),
+          comment: formData.get('comment')
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          alert('Review submitted successfully!');
+          this.reset();
+          loadReviews(id);
+        } else {
+          alert('Error: ' + (data.error || 'Could not submit review'));
+        }
+      });
+    });
+
+    // Load related products
+    function loadRelatedProducts(category, excludeId) {
+      fetch(`backend/product/related.php?cat=${encodeURIComponent(category)}&id=${excludeId}`)
+        .then(r => r.json())
+        .then(products => {
+          const container = document.getElementById('relatedProducts');
+          
+          if (products.length === 0) {
+            container.innerHTML = '<div class="card">No related products found</div>';
+            return;
+          }
+          
+          container.innerHTML = products.map(p => `
+            <div class="card">
+              <a href="product-details.html?id=${p.id}">
+                <img src="assets/images/${encodeURIComponent(p.image)}" 
+                     alt="${p.name}" 
+                     style="width:100%; height:150px; object-fit:cover;">
+                <p style="margin:10px 0;">${p.name}</p>
+              </a>
+              <small>₦${Number(p.price).toLocaleString()}</small>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          container.innerHTML = '<div class="card">Error loading related products</div>';
+        });
+    }
+
+    // Update cart count in header
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      
+      // Update all cart count elements
+      document.querySelectorAll('.cart-count').forEach(el => {
+        el.textContent = count;
+      });
+    }
+  </script>
 </body>
 </html>
