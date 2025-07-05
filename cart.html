@@ -9,11 +9,6 @@
 
   <!-- Cart-specific styles -->
   <style>
-    .cart-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -22,45 +17,29 @@
     th, td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid #444;
     }
     .cart-img {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       object-fit: cover;
       border-radius: 4px;
     }
     .qty-btn {
-      padding: 5px 10px;
+      padding: 4px 8px;
       margin: 0 5px;
       cursor: pointer;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
     }
-    .summary-card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-    }
-    .summary-row {
+    .cta-bar {
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
+      align-items: center;
+      margin-top: 20px;
     }
     .empty-cart {
       text-align: center;
       padding: 40px;
       font-size: 1.2em;
-    }
-    .remove-btn {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -73,12 +52,13 @@
   </header>
 
   <!-- ─── MAIN CONTENT ────────────────────────────────── -->
-  <main class="cart-container">
+  <main style="max-width: 900px; margin: 40px auto">
     <div id="emptyMsg" class="empty-cart">Your cart is empty.</div>
 
     <table id="cartTable" style="display: none;">
       <thead>
         <tr>
+          <th>Item</th>
           <th>Product</th>
           <th>Price</th>
           <th>Quantity</th>
@@ -89,27 +69,120 @@
       <tbody id="cartBody"></tbody>
     </table>
 
-    <div id="cartSummary" class="summary-card" style="display: none;">
-      <h3>Order Summary</h3>
-      <div class="summary-row">
-        <span>Subtotal:</span>
-        <span id="subTotal">₦0</span>
-      </div>
-      <div class="summary-row">
-        <span>Shipping:</span>
-        <span id="shipping">₦0</span>
-      </div>
-      <div class="summary-row" style="font-weight: bold; border-top: 1px solid var(--border-color); padding-top: 10px;">
-        <span>Total:</span>
-        <span id="grandTotal">₦0</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+    <div id="cartSummary" class="cta-bar" style="display: none;">
+      <strong>Subtotal: <span id="subTotal">₦0</span></strong>
+      <div>
         <button id="clearCart" class="btn-danger">🗑️ Clear Cart</button>
-        <button id="checkoutBtn" class="btn-primary">Proceed to Checkout →</button>
+        <button id="checkoutBtn" class="btn-primary">Checkout →</button>
       </div>
     </div>
   </main>
 
-  <script src="assets/js/cart.js"></script>
+  <!-- Cart JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cartBody = document.getElementById('cartBody');
+      const emptyMsg = document.getElementById('emptyMsg');
+      const cartTable = document.getElementById('cartTable');
+      const cartSummary = document.getElementById('cartSummary');
+      const subTotal = document.getElementById('subTotal');
+      const clearCartBtn = document.getElementById('clearCart');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+
+      // Load cart from localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Render cart items
+      function renderCart() {
+        if (cart.length === 0) {
+          emptyMsg.style.display = 'block';
+          cartTable.style.display = 'none';
+          cartSummary.style.display = 'none';
+          return;
+        }
+
+        emptyMsg.style.display = 'none';
+        cartTable.style.display = 'table';
+        cartSummary.style.display = 'flex';
+
+        let total = 0;
+        cartBody.innerHTML = cart.map(item => {
+          const itemTotal = item.price * item.quantity;
+          total += itemTotal;
+          
+          return `
+            <tr>
+              <td><img src="assets/images/${encodeURIComponent(item.image)}" alt="${item.name}" class="cart-img"></td>
+              <td>${item.name}</td>
+              <td>₦${parseFloat(item.price).toLocaleString()}</td>
+              <td>
+                <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                ${item.quantity}
+                <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+              </td>
+              <td>₦${itemTotal.toLocaleString()}</td>
+              <td><button onclick="removeItem(${item.id})" class="btn-danger">Remove</button></td>
+            </tr>
+          `;
+        }).join('');
+
+        subTotal.textContent = `₦${total.toLocaleString()}`;
+      }
+
+      // Update item quantity
+      function updateQuantity(productId, change) {
+        const item = cart.find(i => i.id == productId);
+        if (item) {
+          item.quantity += change;
+          
+          if (item.quantity <= 0) {
+            cart = cart.filter(i => i.id != productId);
+          }
+          
+          saveCart();
+        }
+      }
+
+      // Remove item from cart
+      function removeItem(productId) {
+        cart = cart.filter(i => i.id != productId);
+        saveCart();
+      }
+
+      // Clear entire cart
+      function clearCart() {
+        if (confirm('Are you sure you want to clear your cart?')) {
+          cart = [];
+          saveCart();
+        }
+      }
+
+      // Save cart to localStorage and re-render
+      function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      // Checkout button handler
+      function checkout() {
+        if (cart.length === 0) {
+          alert('Your cart is empty!');
+          return;
+        }
+        window.location.href = 'checkout.html';
+      }
+
+      // Set up event listeners
+      clearCartBtn.addEventListener('click', clearCart);
+      checkoutBtn.addEventListener('click', checkout);
+      
+      // Make functions available globally
+      window.updateQuantity = updateQuantity;
+      window.removeItem = removeItem;
+
+      // Initial render
+      renderCart();
+    });
+  </script>
 </body>
 </html>
